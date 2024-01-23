@@ -38,51 +38,51 @@
         :row-span 8}
        [:div.board-cell
         [:div
-         {:class (cond
-                   ((set current-guess) :green) "marble green guessed"
-                   :else "marble green")
+         {:class    (cond
+                      ((set current-guess) :green) "marble green guessed"
+                      :else "marble green")
           :on-click #(rf/dispatch-sync [:add-guess :green])}]]
        [:div.board-cell
         [:div
-         {:class (cond
-                   ((set current-guess) :red) "marble red guessed"
-                   :else "marble red")
+         {:class    (cond
+                      ((set current-guess) :red) "marble red guessed"
+                      :else "marble red")
           :on-click #(rf/dispatch-sync [:add-guess :red])}]]
        [:div.board-cell
         [:div
-         {:class (cond
-                   ((set current-guess) :blue) "marble blue guessed"
-                   :else "marble blue")
+         {:class    (cond
+                      ((set current-guess) :blue) "marble blue guessed"
+                      :else "marble blue")
           :on-click #(rf/dispatch-sync [:add-guess :blue])}]]
        [:div.board-cell
         [:div
-         {:class (cond
-                   ((set current-guess) :orange) "marble orange guessed"
-                   :else "marble orange")
+         {:class    (cond
+                      ((set current-guess) :orange) "marble orange guessed"
+                      :else "marble orange")
           :on-click #(rf/dispatch-sync [:add-guess :orange])}]]
        [:div.board-cell
         [:div
-         {:class (cond
-                   ((set current-guess) :yellow) "marble yellow guessed"
-                   :else "marble yellow")
+         {:class    (cond
+                      ((set current-guess) :yellow) "marble yellow guessed"
+                      :else "marble yellow")
           :on-click #(rf/dispatch-sync [:add-guess :yellow])}]]
        [:div.board-cell
         [:div
-         {:class (cond
-                   ((set current-guess) :pink) "marble pink guessed"
-                   :else "marble pink")
+         {:class    (cond
+                      ((set current-guess) :pink) "marble pink guessed"
+                      :else "marble pink")
           :on-click #(rf/dispatch-sync [:add-guess :pink])}]]
        [:div.board-cell
         [:div
-         {:class (cond
-                   ((set current-guess) :purple) "marble purple guessed"
-                   :else "marble purple")
+         {:class    (cond
+                      ((set current-guess) :purple) "marble purple guessed"
+                      :else "marble purple")
           :on-click #(rf/dispatch-sync [:add-guess :purple])}]]
        [:div.board-cell
         [:div
-         {:class (cond
-                   ((set current-guess) :cyan) "marble cyan guessed"
-                   :else "marble cyan")
+         {:class    (cond
+                      ((set current-guess) :cyan) "marble cyan guessed"
+                      :else "marble cyan")
           :on-click #(rf/dispatch-sync [:add-guess :cyan])}]]]
       (into
        [:div.col.col-lg-3]
@@ -96,48 +96,36 @@
                        "guess-cell")}
              (if (= current-guess-number j)
                [:div
-                {:class (when (current-guess i)
-                          (str "marble " (name (current-guess i))))
+                {:class    (when (current-guess i)
+                             (str "marble " (name (current-guess i))))
                  :on-click #(rf/dispatch-sync [:remove-guess i])}]
                (let [guess (nth guesses (dec j) nil)]
                  (prn "guess: " guess)
                  (when (and guess (guess i))
                    [:div
                     {:class (str "marble " (name (guess i)))}])))]))))
+      
+      ;; checkers
       [:div.col.col-lg-1
-       [:div.row
-        [:div.check-guess-holder
-         [:i.fas.fa-play.check-guess
-          {:on-click #(rf/dispatch-sync [:check-guess])}]]]
-       [:div.row
-        [:div.check-guess-holder
-         [:i.fas.fa-play.check-guess]]]
-       [:div.row
-        [:div.check-guess-holder
-         [:i.fas.fa-play.check-guess]]]
-       [:div.row
-        [:div.check-guess-holder
-         [:i.fas.fa-play.check-guess]]]
-       [:div.row
-        [:div.check-guess-holder
-         [:i.fas.fa-play.check-guess]]]
-       [:div.row
-        [:div.check-guess-holder
-         [:i.fas.fa-play.check-guess]]]
-       [:div.row
-        [:div.check-guess-holder
-         [:i.fas.fa-play.check-guess]]]
-       [:div.row
-        [:div.check-guess-holder
-         [:i.fas.fa-play.check-guess]]]]
+       (for [i (range 1 9)]
+         [:div.row
+          [:div.check-guess-holder
+           {:on-click #(rf/dispatch-sync [:check-guess])}
+           (when (= current-guess-number i)
+             [:i.fas.fa-play.check-guess])]])]
+      
+      ;; clues
       [:div.col.col-lg-2
-       [:div.row
-        (let [[a b c d] (nth clues 0 nil)]
-          [:div.clue.clue-grid
-           [:div (lgc/get-clue-marker a)]
-           [:div (lgc/get-clue-marker b)]
-           [:div (lgc/get-clue-marker c)]
-           [:div (lgc/get-clue-marker d)]])]]
+       (for [i (range 0 9)]
+         [:div.row
+          (if (> (count clues) i)
+            (let [[a b c d] (nth clues i nil)]
+              [:div.clue.clue-grid
+               [:div (lgc/get-clue-marker a)]
+               [:div (lgc/get-clue-marker b)]
+               [:div (lgc/get-clue-marker c)]
+               [:div (lgc/get-clue-marker d)]])
+            [:div])])]
       [:div.row]]]))
 
 ;; -- After-Load --------------------------------------------------------------------

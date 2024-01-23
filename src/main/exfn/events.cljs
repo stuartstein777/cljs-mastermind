@@ -47,7 +47,7 @@
  (fn [db _]
    (let [solution (db :solution)
          guess    (db :current-guess)
-         clue     (lgc/check-guess solution guess)]
+         clue     (lgc/check-guess solution (vals guess))]
      (-> db
          (assoc :clues (conj (db :clues) clue))
          (update :current-guess-number inc)
@@ -55,16 +55,6 @@
          (assoc :current-guess {1 nil, 2 nil, 3 nil, 4 nil})))))
 
 (comment
-  (let [current-guess {1 :red, 2 nil, 3 nil, 4 :orange}
-        color :green]
-    (if (current-guess 1)
-      (if (current-guess 2)
-        (if (current-guess 3)
-          (if (current-guess 4)
-            current-guess
-            (assoc current-guess 4 color))
-          (assoc current-guess 3 color))
-        (assoc current-guess 2 color))
-      (assoc current-guess 1 color)))
+  
     
     )

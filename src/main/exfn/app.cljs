@@ -104,7 +104,6 @@
                  (when (and guess (guess i))
                    [:div
                     {:class (str "marble " (name (guess i)))}])))]))))
-      
       [:div.col.col-lg-1
        [:div.row
         [:div.check-guess-holder
@@ -130,20 +129,16 @@
          [:i.fas.fa-play.check-guess]]]
        [:div.row
         [:div.check-guess-holder
-         [:i.fas.fa-play.check-guess]]]
-       
-       ]
+         [:i.fas.fa-play.check-guess]]]]
       [:div.col.col-lg-2
        [:div.row
-        [:div.clue.clue-grid
-         [:div [:i.fas.fa-circle]]
-         [:div [:i.far.fa-circle]]
-         [:div [:i.fas.fa-circle.wrong]]
-         [:div [:i.fas.fa-circle.wrong]]]
-        ]
-       ]
-      [:div.row]
-      ]]))
+        (let [[a b c d] (nth clues 0 nil)]
+          [:div.clue.clue-grid
+           [:div (lgc/get-clue-marker a)]
+           [:div (lgc/get-clue-marker b)]
+           [:div (lgc/get-clue-marker c)]
+           [:div (lgc/get-clue-marker d)]])]]
+      [:div.row]]]))
 
 ;; -- After-Load --------------------------------------------------------------------
 ;; Do this after the page has loaded.

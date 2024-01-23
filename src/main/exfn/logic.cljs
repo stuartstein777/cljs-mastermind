@@ -22,9 +22,11 @@
             :else              :wrong))
         solution guess))
 
-(check-guess 
- [:red :orange :green :pink]
- [:pink :orange :green :blue])
+(defn get-clue-marker [clue]
+  (condp = clue
+    :pos-and-color [:i.far.fa-circle]
+    :color         [:i.fas.fa-circle]
+    :wrong         [:i.fas.fa-circle.wrong]))
 
 (comment
   

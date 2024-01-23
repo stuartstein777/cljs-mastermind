@@ -12,7 +12,9 @@
   (let [current-guess        @(rf/subscribe [:current-guess])
         current-guess-number @(rf/subscribe [:current-guess-number])
         guesses              @(rf/subscribe [:guesses])
-        clues                @(rf/subscribe [:clues])]
+        clues                @(rf/subscribe [:clues])
+        solution             @(rf/subscribe [:solution])
+        game-won?            @(rf/subscribe [:game-won?])]
     [:div.container
      [:div.row
       [:div.col.col-lg-8
@@ -84,36 +86,42 @@
                       ((set current-guess) :cyan) "marble cyan guessed"
                       :else "marble cyan")
           :on-click #(rf/dispatch-sync [:add-guess :cyan])}]]]
+
+      ;; guesses
       (into
        [:div.col.col-lg-3]
-       (for [j (range 1 9)]
-         (into 
-          [:div.row]
-          (for [i (range 1 5)]
-            [:div
-             {:class (if (< current-guess-number j)
-                       "guess-cell inactive"
-                       "guess-cell")}
-             (if (= current-guess-number j)
-               [:div
-                {:class    (when (current-guess i)
-                             (str "marble " (name (current-guess i))))
-                 :on-click #(rf/dispatch-sync [:remove-guess i])}]
-               (let [guess (nth guesses (dec j) nil)]
-                 (prn "guess: " guess)
-                 (when (and guess (guess i))
-                   [:div
-                    {:class (str "marble " (name (guess i)))}])))]))))
-      
+       (into
+        (for [j (range 1 9)]
+          (into
+           [:div.row]
+           (for [i (range 1 5)]
+             [:div
+              {:class (if (< current-guess-number j)
+                        "guess-cell inactive"
+                        "guess-cell")}
+              (if (= current-guess-number j)
+                [:div
+                 {:class    (when (current-guess i)
+                              (str "marble " (name (current-guess i))))
+                  :on-click #(rf/dispatch-sync [:remove-guess i])}]
+                (let [guess (nth guesses (dec j) nil)]
+                  (prn "guess: " guess)
+                  (when (and guess (guess i))
+                    [:div
+                     {:class (str "marble " (name (guess i)))}])))])))))
+
       ;; checkers
       [:div.col.col-lg-1
        (for [i (range 1 9)]
          [:div.row
           [:div.check-guess-holder
-           {:on-click #(rf/dispatch-sync [:check-guess])}
-           (when (= current-guess-number i)
+           {:style {:display (if (= 4 (->> current-guess vals (remove nil?) count))
+                                :block
+                                :none)}
+            :on-click #(rf/dispatch-sync [:check-guess])}
+           (when (and (not game-won?) (= current-guess-number i))
              [:i.fas.fa-play.check-guess])]])]
-      
+
       ;; clues
       [:div.col.col-lg-2
        (for [i (range 0 9)]
@@ -125,8 +133,33 @@
                [:div (lgc/get-clue-marker b)]
                [:div (lgc/get-clue-marker c)]
                [:div (lgc/get-clue-marker d)]])
-            [:div])])]
-      [:div.row]]]))
+            [:div])])]]
+
+     [:div.row
+      [:div.col.col-lg-1]
+      [:div.col.col-lg-3
+       (when (or (= current-guess-number 9) game-won?)
+         [:div
+          [:div.row
+           {:style {:margin-left 70}}
+           [:h3 (if game-won? "Winner!" "Solution")]]
+          [:div.row
+           [:div.guess-cell
+            [:div
+             {:class (str "marble " (name (nth solution 0)))}]]
+           [:div.guess-cell
+            [:div
+             {:class (str "marble " (name (nth solution 1)))}]]
+           [:div.guess-cell
+            [:div
+             {:class (str "marble " (name (nth solution 2)))}]]
+           [:div.guess-cell
+            [:div
+             {:class (str "marble " (name (nth solution 3)))}]]]])]]
+     [:button.btn.btn-primary
+      {:style {:margin-top 20}
+       :on-click #(rf/dispatch-sync [:initialize])}
+      "New Game"]]))
 
 ;; -- After-Load --------------------------------------------------------------------
 ;; Do this after the page has loaded.

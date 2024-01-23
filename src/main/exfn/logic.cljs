@@ -7,7 +7,7 @@
    :yellow "yellow"
    :green  "green" 
    :pink   "pink"
-   :brown  "brown"
+   :purple "purple"
    :cyan   "cyan"
    :blue   "blue"})
 
@@ -24,14 +24,10 @@
 
 (defn get-clue-marker [clue]
   (condp = clue
-    :pos-and-color [:i.far.fa-circle]
-    :color         [:i.fas.fa-circle]
+    :pos-and-color [:i.fas.fa-circle]
+    :color         [:i.far.fa-circle]
     :wrong         [:i.fas.fa-circle.wrong]))
 
-(comment
-  
-  
-  
-  )
+
   
   

@@ -20,3 +20,13 @@
   :clues
   (fn [db _]
     (:clues db)))
+
+(rf/reg-sub
+  :solution
+  (fn [db _]
+    (:solution db)))
+
+(rf/reg-sub
+  :game-won?
+  (fn [db _]
+    (:game-won? db)))

@@ -33,7 +33,8 @@
 (rf/reg-event-db
  :add-guess
  (fn [db [_ color]]
-   (if (already-guessed (db :current-guess) color)
+   (if (or (db :game-won?)
+           (already-guessed (db :current-guess) color))
      db
      (assoc db :current-guess (add-guess (db :current-guess) color)))))
 
@@ -52,9 +53,15 @@
          (assoc :clues (conj (db :clues) clue))
          (update :current-guess-number inc)
          (update :guesses conj guess)
-         (assoc :current-guess {1 nil, 2 nil, 3 nil, 4 nil})))))
+         (assoc :current-guess {1 nil, 2 nil, 3 nil, 4 nil})
+         (assoc :game-won? (set/subset? (set solution) (set (vals guess))))))))
 
 (comment
   
-    
+  (let [guess {1 nil, 2 nil, 3 nil, 4 nil}]
+    (->> guess
+         vals
+         (remove nil?)
+         count)
     )
+  )

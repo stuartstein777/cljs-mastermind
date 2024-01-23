@@ -143,23 +143,19 @@
           [:div.row
            {:style {:margin-left 70}}
            [:h3 (if game-won? "Winner!" "Solution")]]
-          [:div.row
-           [:div.guess-cell
-            [:div
-             {:class (str "marble " (name (nth solution 0)))}]]
-           [:div.guess-cell
-            [:div
-             {:class (str "marble " (name (nth solution 1)))}]]
-           [:div.guess-cell
-            [:div
-             {:class (str "marble " (name (nth solution 2)))}]]
-           [:div.guess-cell
-            [:div
-             {:class (str "marble " (name (nth solution 3)))}]]]])]]
-     [:button.btn.btn-primary
-      {:style {:margin-top 20}
-       :on-click #(rf/dispatch-sync [:initialize])}
-      "New Game"]]))
+          (into
+           [:div.row]
+           (for [i (range 0 4)]
+             [:div.guess-cell
+              [:div
+               {:class (str "marble " (name (nth solution i)))}]]))])]]
+     [:div.row
+      [:div.col.col-lg-1]
+      [:div.col.col-lg-3
+       [:button.btn.btn-primary
+        {:style {:margin-top 20}
+         :on-click #(rf/dispatch-sync [:initialize])}
+        "New Game"]]]]))
 
 ;; -- After-Load --------------------------------------------------------------------
 ;; Do this after the page has loaded.

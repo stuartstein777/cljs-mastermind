@@ -15,12 +15,12 @@
   (keys (take no-colors (shuffle colors))))
 
  (defn check-guess [solution guess]
-   (map (fn [s g]
-          (cond
-            (= s g)            :pos-and-color
-            ((set solution) g) :color
-            :else              :wrong))
-        solution guess))
+   (shuffle (map (fn [s g]
+                   (cond
+                     (= s g)            :pos-and-color
+                     ((set solution) g) :color
+                     :else              :wrong))
+                 solution guess)))
 
 (defn get-clue-marker [clue]
   (condp = clue

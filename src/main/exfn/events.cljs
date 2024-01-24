@@ -54,7 +54,7 @@
          (update :current-guess-number inc)
          (update :guesses conj guess)
          (assoc :current-guess {1 nil, 2 nil, 3 nil, 4 nil})
-         (assoc :game-won? (set/subset? (set solution) (set (vals guess))))))))
+         (assoc :game-won? (every? #(= :pos-and-color) clue)))))
 
 (comment
   
